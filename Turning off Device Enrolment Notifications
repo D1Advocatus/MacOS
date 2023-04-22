@@ -1,0 +1,37 @@
+# How to turn off Device Enrollment Notifications on your MacBook Pro
+# Tested and working on MacOs Catalina & Big Sur, it should work on higher versions
+
+*******************************************************************************************************************
+
+# 1 Open Terminal and enter the command below to check if your Mac has any enrollment profiles
+sudo profiles show -type enrollment
+
+# 2 Now enter the following command, you will be prompted to enter your password
+
+sudo nano /etc/hosts
+
+# 3 At the bottom of the document add the lines below, to block your Mac from reaching any MDM domains
+0.0.0.0 iprofiles.apple.com
+0.0.0.0 mdmenrollment.apple.com
+0.0.0. deviceenrollment.apple.com
+0.0.0.0 gdmf.apple.com
+
+# To save the document press ctrl O, followed by ctrl X
+
+# 4 Now let's confirm that your Mac cannot reach any MDM domains, on your terminal window enter the following command:
+
+sudo profiles show -type enrollment
+
+# You should receive the following error
+  # Error fetching Device Enrollment configuration: (34006) 
+  # Error Domain=MCCloudConfigurationErrorDomain Code=34006 
+  # "The Device Enrollment server is unavailable. Please try again later." 
+  # UserInfo={USEnglishDescription=CLOUD_CONFIG_MAX_RETRIES_EXCEEDED,
+  # NSLocalizedDescription=The Device Enrollment server is unavailable. 
+  # Please try again later., MCErrorType=MCFatalError}
+  
+# 5 On the same Terminal Window, enter the following command to delete any profiles
+sudo profiles remove -all
+
+# Lastly, let's recheck if your Mac has any enrollment profiles. It should receive the same error as section #4
+sudo profiles show -type enrollment
